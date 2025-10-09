@@ -1752,9 +1752,7 @@ https://flask-todo-app.onrender.com
 **เพิ่ม RENDER_DEPLOY_HOOK_URL และ RENDER_APP_URL บน GitHub Repository**
 **ทำการ push ไปที่ GitHub Repository** แล้วตรวจสอบผลการทำงาน
 ## บันทึกรูปผลการทำงาน
-```bash
-# บันทึกรูปผลการทำงานที่นี่
-``` 
+<img width="1069" height="606" alt="ภาพถ่ายหน้าจอ 2568-10-09 เวลา 20 49 12" src="https://github.com/user-attachments/assets/da9c4c0b-9167-4ecf-8c45-aa466a2f7cfb" />
 
 ---
 
@@ -1919,13 +1917,13 @@ curl https://YOUR_RAILWAY_APP_URL/api/health
 
 ก่อน push code และ trigger GitHub Actions ให้ตรวจสอบ:
 
-- [ ] Render Database สร้างเสร็จและสถานะ "Available"
-- [ ] Render Web Service deploy สำเร็จและสถานะ "Live"
-- [ ] Railway Database และ Web Service ทำงานปกติ
-- [ ] สร้าง GitHub Secrets ครบ 5 ตัว
-- [ ] ทดสอบ health endpoints ของทั้ง Render และ Railway ได้
-- [ ] URL ไม่มี `/` ท้าย
-- [ ] DATABASE_URL ใช้ Internal URL (สำหรับ Render)
+- [✓] Render Database สร้างเสร็จและสถานะ "Available"
+- [✓] Render Web Service deploy สำเร็จและสถานะ "Live"
+- [✓] Railway Database และ Web Service ทำงานปกติ
+- [✓] สร้าง GitHub Secrets ครบ 5 ตัว
+- [✓] ทดสอบ health endpoints ของทั้ง Render และ Railway ได้
+- [✓] URL ไม่มี `/` ท้าย
+- [✓] DATABASE_URL ใช้ Internal URL (สำหรับ Render)
 
 ---
 
@@ -2164,15 +2162,38 @@ docker-compose up -d
 
 1. **Docker Architecture**:
    - เหตุใดจึงต้องแยก database และ application เป็นคนละ containers ?
+      - Isolation :ถ้า database และ app อยู่ container เดียวกัน หาก app ล่มหรือเกิดปัญหา จะกระทบ database ด้วย
+      - Scalability :สามารถเพิ่มจำนวน app containers เพื่อรองรับ traffic โดยไม่กระทบ database
+      - Maintainability :อัปเดต app version ได้โดยไม่ต้องยุ่งกับ database
+      - Portability :แต่ละ container สามารถ run บน environment ใดก็ได้ เช่น local, production
    - Multi-stage build มีประโยชน์อย่างไร?
-
+      - ลดขนาด image:Build stage ใช้ tools และ dependencies เต็มรูปแบบ แต่ final stage มีเฉพาะสิ่งที่จำเป็นจริง ๆ → ทำให้ image เล็กลง
+      - ความปลอดภัยสูงขึ้น:Tools และ source code สำหรับ build จะไม่ถูก include ใน final image → ลดโอกาสถูกโจมตี
+      - เร็วและสะดวก:ใช้ Docker cache ในขั้นตอน build stage → การ build ครั้งต่อไปเร็วขึ้น
 2. **Testing Strategy**:
    - การวัด code coverage มีความสำคัญอย่างไร?
-
+      - ประเมินความสมบูรณ์ของการทดสอบ:ดูว่ามี code ส่วนไหนถูก test บ้าง ไม่ใช่แค่ run ผ่านหรือไม่ผ่าน
+      - ลด bug:ถ้า coverage สูง → โอกาสมี bug ในส่วนที่ไม่ได้ test ต่ำ
+      - ปรับปรุง quality ของ code:Developers จะเห็นส่วนที่ยังไม่ได้ test → เขียน test เพิ่ม
+      - สื่อสารกับทีมและ CI/CD:Coverage ใช้เป็น metric ในการ merge PR หรือ release
 3. **Deployment**:
    - Health check endpoint มีความสำคัญอย่างไร?
+      - ตรวจสอบว่า app ยังทำงานปกติ:เช่น /health endpoint คืนค่า 200 → หมายความว่า app พร้อมรับ traffic
+      - ใช้กับ Load balancer / Orchestrator:Kubernetes, Railway, Render จะเช็ค health endpoint เพื่อไม่ส่ง traffic ไป container ที่ล่ม
+      - ช่วย debug เบื้องต้น:ถ้า DB หรือ service อื่นไม่พร้อม → health check ล้ม → รู้ปัญหาเร็ว
    - Render และ Railway มีความแตกต่างกันอย่่างไร?
-
+      1. จุดประสงค์หลัก
+         - Render: เน้น production-ready apps รองรับการ deploy service หลายประเภทพร้อมกัน เช่น web, static site, database, cron jobs
+         - Railway: เน้น rapid prototyping และ deploy ง่าย เหมาะกับโปรเจกต์เล็กหรือทดลองใช้งาน
+      2. การตั้งค่าและการใช้งาน
+         - Render: ตั้งค่าละเอียดกว่า รองรับ auto-scaling, health check, metrics, environment variables ครบถ้วน
+         - Railway: ตั้งค่าเรียบง่าย ใช้ CLI หรือ dashboard ได้ทันที เหมาะกับคนอยาก deploy เร็ว ไม่อยาก config เยอะ
+      3. การจัดการ database
+         - Render: มีบริการ database แยกชัดเจน พร้อม version control, backup, scaling
+         - Railway: มี database ให้ใช้เหมือนกัน แต่ feature อาจจำกัดกว่า และ free tier มีข้อจำกัด
+      4. Logs & Monitoring
+         - Render: ให้ logs, metrics, health check ครบ เหมาะกับ production
+         - Railway: มี logs และ metrics ให้ดู แต่ monitoring และ control ยังไม่ละเอียดเท่า Render
 
 ---
 
