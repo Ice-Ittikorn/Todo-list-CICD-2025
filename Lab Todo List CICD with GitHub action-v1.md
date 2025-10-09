@@ -1380,18 +1380,40 @@ start htmlcov/index.html  # Windows
 ```
 
 ## แนบรูปผลการทดลองการทดสอบระบบ
-```plaintext
-# แนบรูปผลการทดลองที่นี่
+<img width="1424" height="783" alt="ภาพถ่ายหน้าจอ 2568-10-09 เวลา 14 21 11" src="https://github.com/user-attachments/assets/34a99ed6-f217-4fe4-9b71-890081b42631" />
 
-``` 
+
 ## คำถามการทดลอง
 ให้จับคู่ Code ส่วนของการทดสอบ กับ Code การทำงาน มาอย่างน้อย 3 ฟังก์ชัน พร้อมอธิบายการทำงานของแต่ละกรณี
-```plaintext
-# ตอบคำถามที่นี่
-
-
+1. ฟังก์ชัน delete_todo()
 ```
-
+การทำงาน: ลบ Todo ที่มี id ตรงกับที่ระบุ และส่งกลับข้อความยืนยันการลบ
+เทสเคสที่เกี่ยวข้อง:
+test_delete_todo: ทดสอบการลบ Todo ที่มีอยู่ในฐานข้อมูล
+test_delete_nonexistent_todo: ทดสอบการลบ Todo ที่ไม่มีอยู่ในฐานข้อมูล
+test_delete_todo_database_error: ทดสอบกรณีที่เกิดข้อผิดพลาดในฐานข้อมูลระหว่างการลบ Todo
+```
+2. ฟังก์ชัน create_todo()
+```
+การทำงาน: รับข้อมูล JSON จากผู้ใช้ เช่น title และ description สร้าง Todo ใหม่ในฐานข้อมูล และส่งกลับข้อมูล Todo ที่สร้างขึ้นใหม่ พร้อมสถานะสำเร็จและข้อความยืนยัน
+เทสเคสที่เกี่ยวข้อง:
+test_create_todo_with_full_data: ทดสอบการสร้าง Todo ด้วยข้อมูลครบถ้วน
+test_create_todo_with_title_only: ทดสอบการสร้าง Todo โดยมีแค่ title (โดยที่ description เป็นอ็อปชัน)
+test_create_todo_without_title: ทดสอบการสร้าง Todo โดยไม่มี title ซึ่งควรล้มเหลว
+test_create_todo_with_none_data: ทดสอบการสร้าง Todo โดยไม่มีข้อมูลใด ๆ ซึ่งควรล้มเหลว
+test_create_todo_database_error: ทดสอบกรณีที่เกิดข้อผิดพลาดในฐานข้อมูลระหว่างการสร้าง Todo
+```
+3. ฟังก์ชัน update_todo()
+```
+การทำงาน: รับข้อมูล JSON ที่ต้องการอัปเดต เช่น title, description, หรือ completed แล้วอัปเดต Todo ที่มี id ตรงกับที่ระบุ
+เทสเคสที่เกี่ยวข้อง:
+test_update_todo_title: ทดสอบการอัปเดตเฉพาะ title ของ Todo
+test_update_todo_description: ทดสอบการอัปเดตเฉพาะ description ของ Todo
+test_update_todo_completed_status: ทดสอบการอัปเดตสถานะ completed ของ Todo
+test_update_todo_all_fields: ทดสอบการอัปเดตทุกฟิลด์ของ Todo
+test_update_nonexistent_todo: ทดสอบการอัปเดต Todo ที่ไม่มีอยู่ในฐานข้อมูล
+test_update_todo_database_error: ทดสอบกรณีที่เกิดข้อผิดพลาดในฐานข้อมูลระหว่างการอัปเดต Todo
+```
 
 ### ขั้นตอนที่ 5.4: Cleanup  (ไม่ต้องทดลอง สามารถข้ามได้)
 
