@@ -2152,8 +2152,8 @@ docker-compose up -d
 - ✅ รัน application ด้วย Docker และทดสอบใน local สำเร็จ
 - ✅ สร้าง GitHub Actions workflow ที่มีทั้ง CI และ CD
 - ✅ Deploy ไปยัง Render สำเร็จ
-- ✅ Deploy ไปยัง Railway สำเร็จ
-- ✅ ทดสอบ API endpoints บน production
+- [ ] Deploy ไปยัง Railway สำเร็จ
+- [ ] ทดสอบ API endpoints บน production
 - ✅ Health checks ทำงานถูกต้อง
 - ✅ Auto-deployment ทำงานเมื่อ push code ใหม่
 
